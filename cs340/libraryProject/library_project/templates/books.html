@@ -1,0 +1,71 @@
+</html>
+    <div class="container">
+       <div class = "row">
+        <div class = "col-12 pt-4">
+           <h5>Add Book</h5>
+            <form id="addBook" action="/books" method="POST">
+              <div class="form-group">
+                <label for="ISBN">ISBN</label>
+                <input type="number" name="ISBN" class="form-control" id="" placeholder="ISBN">
+              </div>
+              <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" name="title" class="form-control" id="" placeholder="Title">
+              </div>
+                <div class="form-group">
+                  <label for="publisher">Publisher</label>
+                  <select id="inputState" name="publisher" class="form-control">
+                    <option selected>Choose...</option>
+                    {% for pubisher in publishers %} 
+                    <option value="{{publisher[0]}}">{{publisher[1]}}</option>
+                    {% endfor %} 
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="location">Location</label>
+                  <select id="inputState" name="location" class="form-control">
+                    <option selected>Choose...</option>
+                    {% for location in locations %} 
+                    <option value="{{location[0]}}">{{location[1]}}</option>
+                    {% endfor %} 
+                  </select>
+                </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+           
+           </div>
+        </div>
+        <div class = "row">
+        <div class = "col-12 pt-4">
+            <h5>Books</h5>
+                <form class="form-inline">
+                  <div class="form-group mb-2">
+                    <label for="inputPassword2" class="sr-only">Password</label>
+                    <input type="text" class="form-control" id="searchBooks" placeholder="Search by Title">
+                  </div>
+                  <button type="submit" class="btn btn-primary mb-2">Search</button>
+                </form>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">ISBN</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">Publisher</th>
+                      <th scope="col">Location</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for book in books %} 
+                    <tr>
+                        <th scope="row">{{book[0]}}</th>
+                        <td>{{book[1]}}</td>
+                        <td>{{book[2]}}</td>
+                        <td>{{book[3]}}</td>
+                    </tr>
+                    {% endfor %} 
+                  </tbody>
+                </table>
+           </div>
+        </div>
+      </div>
+</html>

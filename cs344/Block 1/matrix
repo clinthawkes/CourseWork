@@ -1,0 +1,389 @@
+#! /bin/bash 
+#Author: Clinton Hawkes
+#Progam used to perform operations on matricies.
+
+m1file="m1file$$"
+m2file="m2file$$"
+m1rows=0
+m1cols=0
+m2rows=0
+m2cols=0
+tmprow="tmprowfile$$"
+tmpcol="tmpcolfile$$"
+tmpmatrix="tmpmatrixfile$$"
+finalmatrix="tmpfinal$$"
+numArg=$#      # Stores argument count so functions can access this info 
+
+# Removes files if SIGINT...
+trap "clean; exit 1" INT
+
+#Used to count the rows of one/both input matricies
+CountRows() {
+    # wc with -l returns the number of lines (rows) in the file and saves it to a tmp file 
+    wc -l $m1file | cat > $tmprow 
+    # retreives the first field, which is the line (row) count, and saves it in the m1rows variable 
+    m1rows=$(cut -d " " -f 1 $tmprow)
+    
+    # Determines if there is one or two input matricies. If two, repeat steps above 
+    if [ 3 -eq "$numArg" ]
+    then
+        #if there were two, the process for the first matrix above is repeated.  
+        wc -l $m2file | cat > $tmprow 
+        m2rows=$(cut -d " " -f 1 $tmprow)
+    fi
+}
+
+#Used to count the number of columns in one/both input matricies
+CountCols() {
+    # Stores the first line (row) of matrix 1 as a variable 
+    firstrow=$(head -n 1 $m1file)
+    # Iterates over the elements of the first row 
+    for i in $firstrow
+    do
+        # Counts the number of columns by incrementing the m1cols variable with each
+        # element read
+        m1cols=$(( m1cols + 1 ))
+    done 
+    
+    # Determines if there is one or two input matricies. If two, repeat steps above 
+    if [ "$numArg" == 3 ]
+    then
+        # Stores first line (row) of matrix 2 as a variable 
+        firstrow=$(head -n 1 $m2file)
+        # Iterates over all the elements in the first row 
+        for i in $firstrow
+        do
+            # Counts matrix 2 columns by incrementing the m2cols variable with each iteration 
+            m2cols=$(( m2cols + 1 ))
+        done 
+    fi
+}
+
+# Determines the dimensions of matrix 1  
+dims() {
+    # Function counts rows and stores in variable 
+    CountRows
+    # Function counts columns and stores in variable 
+    CountCols
+    # Outputs result to terminal in "Rows Cols" format
+    echo  "$m1rows $m1cols"
+}
+
+# Transposes the matrix passed as an argument to this function
+transpose() {
+    # Calls these two functions to count the rows and columns of the matrix 
+    CountRows
+    CountCols
+    # variable i determines with column is being processed 
+    for i in $(seq 1 $m1cols) 
+    do 
+        # Clears out the tmpcol file 
+        > $tmpcol 
+        # Reads the matrix 1 file line by line 
+        while read rowread
+        do
+            # Stores each line in the tmprow file for processing 
+            echo "$rowread" > $tmprow 
+            # Stores the field of the current row corresponding to 
+            # the current working column denoted by i
+            cut -f $i $tmprow >> $tmpcol   
+            
+        done < $m1file  # File being used
+        
+        # Takes the tmpcol file we are working with and turns it into a row
+        cat $tmpcol | tr '\n' '\t' > $tmprow
+        
+        # The row we just created is saved to a variable 
+        myvar=`cat $tmprow`
+        # This removes the trailing tab from the row 
+        myvar=${myvar%?}
+        
+        # Appends the processed row in myvars to the tmpmatrix file 
+        echo "$myvar" >> $tmpmatrix 
+        
+    done        
+    
+    # Displays the transposed matrix we created to the console 
+    cat $tmpmatrix     
+}
+
+# Calculates the mean of every column in a matrix and displays a results
+mean() {
+    # Calls these two functions to count the rows and columns of matrix 1 
+    CountRows
+    CountCols
+
+    # i determines the current working column.  
+    for i in $(seq 1 $m1cols) 
+    do 
+        # Resets the sum to 0 when beginning calculations for each column 
+        tmpsum=0 
+        # Clears out the tmpcol file so numbers can be appended 
+        > $tmpcol 
+        # Reads each line (row) of matrix file one by one 
+        while read rowread
+        do
+            # Stores each row in a tmp file for working 
+            echo "$rowread" > $tmprow 
+            # Stores the field from row that corresponds to the current column  
+            cut -f $i $tmprow >> $tmpcol   
+            
+        done < $m1file     # File being read
+        
+        # Turns the column from tmpcol file into a row and stores it in tmprow 
+        cat $tmpcol | tr '\n' '\t' > $tmprow
+        
+        # Reads the row we just created and stores it in a variable 
+        myvar=`cat $tmprow`
+        # Removes the trailing tab from the row 
+        myvar=${myvar%?}
+        
+        # Iterates over all the elements in the row 
+        for i in $myvar
+        do
+            # Sums all the values in the row  
+            tmpsum=$(( tmpsum + i ))
+        done
+        
+        # Calculates the mean of the values found in the row.
+        # This is actually finding the mean for a column, we just turned the
+        # columns into rows for easier processing.
+        tmpmean=$(((tmpsum + (m1rows/2)*((tmpsum>0)*2-1))/m1rows)) 
+        
+        # Appends each column mean to the tmpmatrix file 
+        echo -n -e "$tmpmean\t" >> $tmpmatrix 
+        
+    done        
+    
+    # Reads all the column mean values of the input matrix into a variable 
+    myvar=`cat $tmpmatrix`
+    # Removes the trailing tab 
+    myvar=${myvar%?}
+    # Stores all the values back in tmpmatrix file 
+    echo "$myvar" #> $tmpmatrix 
+    
+    # Displays the column means to the console 
+    #cat $tmpmatrix 
+}
+
+# Adds two input matrices together
+add() {
+    
+    # Loop is going to run for the number of rows in the matrices 
+    for i in $(seq 1 $m1rows)
+    do
+        # Reads the i-th row from matrix 1 and stores it in a tmpfile 
+        head -n $i $m1file | tail -1 > tmpcolA$$
+        # Reads the i-th row from matrix 2 and stores it in a tmpfile 
+        head -n $i $m2file | tail -1 > tmpcolB$$
+
+        # Clears out tmprow file so values can be appended 
+        > $tmprow 
+        # Loop corresponds to the number of columns in each row 
+        for j in $(seq 1 $m1cols)
+        do
+            # Number from row i and column j is retrieved from matrix 1 
+            numA=$(cut -f $j tmpcolA$$)
+            # Number from row i and column j is retrieved from matrix 2 
+            numB=$(cut -f $j tmpcolB$$)
+            # Both numbers retrieved are summed 
+            sum=$(( numA + numB ))
+            # The sum is appended to the tmp row file. I sum the matrices one
+            # row at a time to make it easier
+            echo -n -e "$sum\t" >> $tmprow
+        done
+        
+        # The row of sums that was created is read into a variable 
+        myvar=`cat $tmprow`
+        # The trailing tab is removed from the row of sums 
+        myvar=${myvar%?}
+        # The completed row of sums is appended to the tmpmatrix file 
+        echo -e "$myvar" >> $tmpmatrix
+    done        
+    
+    # The matrix filled with the sum of matrix 1 and 2 is displayed to the console 
+    cat $tmpmatrix 
+}
+
+# Multiplies two matrices together
+multiply() {
+    # Creates two arrays so the values of both matrices can be stored separately
+    # The arrays are populated with one element at creation so the matrix elements
+    # that are going to be stored can be retrieved using absolute indexing. (not zero index)
+    firstarr=(1)
+    secondarr=(1)
+
+    # Reads through all the lines (rows) in the first matrix file 
+    while read myline
+    do
+        # Iterates over each element in the row 
+        for i in $myline
+        do
+            # Adds each element from the first matrix to the first array 
+            firstarr+=($i)
+        done
+    done < $m1file    # File for the first matrix
+    
+    # Reads through all the lines (rows) in the second matrix file 
+    while read myline
+    do
+        # Iterates over each element in the current row 
+        for j in $myline
+        do
+            # Adds each element from the second matrix to the second array 
+            secondarr+=($j)
+        done
+    done < $m2file     # File for the second matrix
+    
+    # The number of operations that must be done when multiplying two matrices 
+    # is equal to the #rows in matrix 1 x #cols in matrix 2 x # cols in 
+    # matrix 1. This made indexing the elements from the arrays a no brainer.
+    for i in $(seq 1 $m1rows)
+    do 
+        # Clears tmpmatrix so values can be appended. This is cleared out after
+        # each row  of results has been calculated and appended to the final matrix.
+        > $tmpmatrix 
+        for j in $(seq 1 $m2cols)
+        do 
+            # sum is set to zero after each multiplication element has be calculated 
+            sum=0 
+            for k in $(seq 1 $m1cols)
+            do
+                # Calculates the index of the element in the first matrix that 
+                # will be used. 
+                firstindex=$(( (i-1)*m1cols + k )) 
+                # Retrieves the m1 element corresponding to the firstindex above 
+                numA=${firstarr[$firstindex]} 
+                # Calculates the index of the element in the second matrix that 
+                # will be used. 
+                secondindex=$(( (k-1)*m2cols + j )) 
+                # Retrieves the m2 element corresponding to the secondindex above 
+                numB=${secondarr[$secondindex]} 
+                # Multiplies the two elements 
+                prod=$(( (numA)*(numB) ))
+                # Adds the results from the multiplication to the sum variable 
+                sum=$(( sum + prod ))
+            done
+            # Appends the mult/add result to the tmpmatrix file. Once the row of
+            # results is complete, the row will be appended to the final matrix
+            echo -n -e "$sum\t" >> $tmpmatrix
+        done
+         
+        # Reads the current row of results into a variable 
+        myvar=`cat $tmpmatrix`
+        # Trims the trailing tab from the row of results 
+        myvar=${myvar%?}
+        # Appends the finalized row of results to the final matrix 
+        echo -e "$myvar" >> $finalmatrix
+    done
+    
+    # Displays the final matrix containing the results to the console 
+    cat $finalmatrix 
+}
+
+# Used to delete all the tmp files that are created after program is executed
+clean() {
+    rm -f m1file*
+    rm -f m2file*
+    rm -f tmpcol*
+    rm -f tmprowfile*
+    rm -f tmpmatrixfile*
+    rm -f tmpfinal*
+}
+
+# Program will exit if there is no operation, or if there are too many arguments
+if [ 0 -eq "$#" ] || [ "$#" -ge 4 ]
+then 
+    # Sends message to stderr and exits with value of 1 
+    echo "Invalid command" 1>&2  
+    exit 1 
+    
+# The following will execute if there is just an operation input 
+elif [ 1 -eq "$#" ]
+then 
+    # Since there is just the operation typed in, this line checks to see if 
+    # there is input at stdin. If there is, then the following runs.
+    if [ ! -t 0 ]
+    then
+        # Stores the stdin input to m1file 
+        cat > $m1file 
+        
+        # The operation must be one of the following three options or an error
+        # will be thrown
+        if [ "dims" == "$1" ] || [ "transpose" == "$1" ] || [ "mean" == "$1" ]
+        then
+            $1              #expands what operation was typed on the console
+        else 
+            # Error is sent to stderr if and incorrect operation name was input 
+            echo "Operation not found" > /dev/stderr
+            exit 1 
+        fi
+    else 
+        # Error is sent to stderr if there is nothing piped in 
+        echo "No argument found" > /dev/stderr
+        exit 1 
+    fi 
+    
+# If there is an operation and one arguement passed, the following will run 
+elif [ 2 -eq "$#" ]
+then
+    # This checks to see if the arguement (file) is readable 
+    if [ -r "$2" ]
+    then
+        # The file name is assigned to m1file if it was readable 
+        m1file="$2" 
+        
+        # The operation must be one of the following or an error will be
+        # sent to stderr
+        if [ "dims" == "$1" ] || [ "transpose" == "$1" ] || [ "mean" == "$1" ]
+        then
+            $1               # expands into operation typed into console
+        else
+            # The operation did not match, so an error is sent to stderr 
+            echo "Operation not found" > /dev/stderr
+            exit 1 
+        fi
+    else
+        # Error thrown if the files was not readable 
+        echo "Invalid file" > /dev/stderr
+        exit 1
+    fi     
+    
+# This will execute if there is an operation and two arguments 
+else
+    # Checks to make sure the two arguments(files) are readable 
+    if [ -r "$2" ] && [ -r "$3" ]
+    then
+        # The input file names are stored to m1file and m2file variables.  
+        m1file="$2"
+        m2file="$3"
+        # These functions are called to count the rows and columns of both matices 
+        CountRows
+        CountCols
+        
+        # Checks if the operation is add, and if it is, it checks to make sure 
+        # the input matrices have valid dimensions
+        if [ "add" == "$1" ] && [ $m1rows -eq $m2rows ] && [ $m1cols -eq $m2cols ]
+        then
+            $1
+
+        # Checks if the operation is multiply, and if it is, it checks to make
+        # sure the input matrices have valid dimensions
+        elif [ "multiply" == "$1" ] && [ $m1cols -eq $m2rows ] #&& [ $m1cols -eq $m2rows ]
+        then
+            $1 
+            
+        else
+            # Error is sent to stderr if the operation was not found, or if 
+            # the matrices had invalid dimensions
+            echo "Invalid command" > /dev/stderr
+            exit 1
+        fi
+    else
+        # Error is sent to stderr if one or both files cannot be read 
+        echo "Invalid file" > /dev/stderr
+        exit 1
+    fi
+fi
+# Function called to remove all the temp files
+clean

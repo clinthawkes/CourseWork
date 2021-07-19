@@ -1,0 +1,6 @@
+boats = "boats"
+loads = "loads"
+base_url = "https://hw4-hawkesc.wl.r.appspot.com"
+#base_url = "http://127.0.0.1:8080"
+boats_url = base_url + "/boats/"
+loads_url = base_url + "/loads/"

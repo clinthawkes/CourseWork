@@ -1,0 +1,14 @@
+﻿Clinton Hawkes
+CS261-400
+Amortized Analysis
+
+
+1. Total cost units of performing 50 consecutive push operations on the array with an initial capacity of 8 where the array doubles when resized is 106. This would make the average cost of these 50 push operations 2.12 units. As N grows larger, this strategy for resizing produces an average big-oh complexity of O(1)+. This means the average execution time for each push operation is typically constant, but occasionally the execution time can be more.
+
+
+
+2. Total cost units of performing 50 consecutive push operations on the array with an initial capacity of 8 where the array increases by 2 when resized is 638. This would make the average cost of these 50 push operations 12.76. As N grows larger, this strategy for resizing produces an average big-oh complexity of O(n)+.
+
+This problem was a little tricky for me. The best case is O(1) for a single addition, while the worst case is O(n) for a single addition. This is the same as the strategy for problem 1, but this one has an average complexity of O(n)+? The conclusion I came to was that over-time, the strategy from problem 1 produces an average execution time of 3. This does not increase as N grows larger, so this strategy is considered constant. The strategy from problem 2, however, has an average execution time that continues to increase as N grows larger. The increase appears to be linear, which is what O(n) represents. I tested this out by comparing the average execution time of n=20 and n=40. The average execution time doubled as n doubled. This provided some reassurance that problem 2 has an average big-oh complexity of O(n)+. 
+
+This make sense, because to get the average we divide the total cost by N. Resizing an array by a constant has a time complexity of O(n^2), but the average time complexity is (n^2)/n = O(n)+

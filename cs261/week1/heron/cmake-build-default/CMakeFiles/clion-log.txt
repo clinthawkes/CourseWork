@@ -1,0 +1,4 @@
+/opt/clion-2019.1.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE= -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=gcc -G "CodeBlocks - Unix Makefiles" /home/clint/Dropbox/school/cs261/week1/heron
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/clint/Dropbox/school/cs261/week1/heron/cmake-build-default

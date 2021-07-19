@@ -1,0 +1,5 @@
+Please use the following command to compile my smallsh.c file:
+
+gcc -Wall -pedantic-errors -std=c99 -o smallsh smallsh.c
+
+Make sure you are in the directory containing the smallsh.c file.

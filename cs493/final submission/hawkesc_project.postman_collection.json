@@ -1,0 +1,4318 @@
+{
+	"info": {
+		"_postman_id": "d43c325a-27b9-4776-aa17-4ae91866e0b2",
+		"name": "final-hawkesc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "[Criteria 15] Get all users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d44d820d-daec-466b-9d20-ffd46b8d57f2",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d3c2b033-43dc-4271-a2fe-a3d4345fb2ac",
+						"exec": [
+							"pm.environment.set(\"app_url\", \"https://final-hawkesc.wm.r.appspot.com\");",
+							"pm.environment.set(\"invalid_user\", 1);",
+							"pm.environment.set(\"invalid_jwt\", 1);",
+							"pm.environment.set(\"invalid_passenger\", 1);",
+							"pm.environment.set(\"invalid_flight\", 1);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/users",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post to users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d3037b-c57a-4c7e-bc8c-5374f88d47f4",
+						"exec": [
+							"pm.test(\"405 status code\", function () {",
+							"    pm.response.to.have.status(405);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/users",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create flight1 date not in future",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "8b5b56a5-9656-4830-aae2-ffb4056eb040",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "118be06a-b890-498a-bc08-c21a4ed8aeed",
+						"exec": [
+							"pm.environment.set(\"flight01_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"400 status code\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/11/15\",\n    \"capacity\": 12,\n    \"origin\": \"Phoenix, AZ\",\n    \"destination\": \"Austin, TX\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create flight1 incorrect attribute format",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "da04f05d-1f2a-4a2b-9106-b9388c18fdeb",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2314d6ce-123d-4541-94a8-9bfb6c98c4c3",
+						"exec": [
+							"pm.environment.set(\"flight01_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"400 status code\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/15\",\n    \"capacity\": \"12\",\n    \"origin\": \"Phoenix, AZ\",\n    \"destination\": \"Austin, TX\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create flight1 missing attribute",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0428ba96-ffdd-47a1-ada8-22145eba2449",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "541d9b58-1e2f-45e1-a9c7-f08bc354e7b3",
+						"exec": [
+							"pm.environment.set(\"flight01_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"400 status code\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/15\",\n    \"origin\": \"Phoenix, AZ\",\n    \"destination\": \"Austin, TX\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create flight1 owner1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9106eae2-b920-48ca-b4ac-53f0cfe340a4",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c1c1063d-b410-4be7-9f92-f9c8e8fefd29",
+						"exec": [
+							"pm.environment.set(\"flight01_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"date\"]).to.eq(\"2020/12/15\");",
+							"    pm.expect(pm.response.json()[\"capacity\"]).to.eq(12);",
+							"    pm.expect(pm.response.json()[\"origin\"]).to.eq(\"Phoenix, AZ\");",
+							"    pm.expect(pm.response.json()[\"destination\"]).to.eq(\"Austin, TX\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/15\",\n    \"capacity\": 12,\n    \"origin\": \"Phoenix, AZ\",\n    \"destination\": \"Austin, TX\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify flight1 date attribute",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e78c6a18-61c3-4a7f-85cd-29a352c668cd",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "38a14c4d-8328-46ae-ab82-2dfe2b8314ca",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/17\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify flight1 date attribute non-owner jwt",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "64d69991-c092-4248-92c4-bc42f37c354c",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "7885c34f-caef-4c67-8459-99b5411d1ee2",
+						"exec": [
+							"pm.test(\"403 status code\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/17\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify flight1 date attribute invalid jwt",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "72396e74-e8f4-4e76-9b03-a050e445d39e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "fcb04306-53c8-48d6-b3b8-f78ab1739da9",
+						"exec": [
+							"pm.test(\"401 status code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{invalid_jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/17\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify flight1 date attribute with non-owner jwt",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "dcb0c14a-0b94-4af7-89ef-4a901ed7e460",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b1b90e35-9cc9-4215-a98c-445c7f1cc0a5",
+						"exec": [
+							"pm.test(\"403 status code\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/17\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify flight1 date attribute no jwt",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "aff89425-ca03-4364-9489-ce314472bb39",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ea95dfbf-ceda-462f-91c5-1b336cd67d85",
+						"exec": [
+							"pm.test(\"401 status code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/17\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify flight1 date attribute with PUT",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f1006e75-1585-4d62-bb57-bb2e5fe0140f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2de53ee8-ed81-49b2-b2e5-61ab60ccab76",
+						"exec": [
+							"pm.test(\"400 status code\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/17\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify all flight1 attributes",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "8cbe5fba-2936-41bd-b802-4ebdb087ab94",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "1019b0d6-410f-443c-9828-cc9392ff2eb9",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/17\",\n    \"capacity\": 6,\n    \"origin\": \"Houston, TX\",\n    \"destination\": \"Miami, FL\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create flight2 owner1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c0b6195e-47b1-4514-aa98-d043d29e23c7",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d3b28966-4828-4466-9e7e-bf9e1ea5f8f2",
+						"exec": [
+							"pm.environment.set(\"flight02_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"date\"]).to.eq(\"2020/12/25\");",
+							"    pm.expect(pm.response.json()[\"capacity\"]).to.eq(21);",
+							"    pm.expect(pm.response.json()[\"origin\"]).to.eq(\"Phoenix, AZ\");",
+							"    pm.expect(pm.response.json()[\"destination\"]).to.eq(\"Austin, TX\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/25\",\n    \"capacity\": 21,\n    \"origin\": \"Phoenix, AZ\",\n    \"destination\": \"Austin, TX\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create flight3 owner1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "970bbc76-97de-4951-89ea-18e1b063ab47",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4508c10d-068f-4250-ba48-5888f77fa9e2",
+						"exec": [
+							"pm.environment.set(\"flight03_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2021/02/25\",\n    \"capacity\": 6,\n    \"origin\": \"Boise, ID\",\n    \"destination\": \"Portland, OR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create flight4 owner1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f3d2077d-4d86-432b-81ba-a0b687342204",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d6588730-397f-49cc-8801-a35a7d560ada",
+						"exec": [
+							"pm.environment.set(\"flight04_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/29\",\n    \"capacity\": 16,\n    \"origin\": \"San Francisco, CA\",\n    \"destination\": \"Las Vegas, NV\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create flight5 owner1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "16db8d94-ca9a-4bda-90b4-dcba043d6f17",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "25cda36b-f3c5-4650-af77-b6258e5ce2e0",
+						"exec": [
+							"pm.environment.set(\"flight05_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/31\",\n    \"capacity\": 10,\n    \"origin\": \"Salt Lake City, UT\",\n    \"destination\": \"Denver, CO\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create flight6 owner1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "404cea1d-075c-43dc-96c0-81b43fbebc98",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a7e27a53-01c4-4765-8b1e-378c7c4433f0",
+						"exec": [
+							"pm.environment.set(\"flight06_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2021/01/01\",\n    \"capacity\": 35,\n    \"origin\": \"Phoenix, AZ\",\n    \"destination\": \"Dallas, TX\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create passenger1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "50311a94-1040-416e-92f8-c73d56a8f9b8",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e00f90e-8977-4078-aa0f-fa554416a426",
+						"exec": [
+							"pm.environment.set(\"passenger01_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"Clint Hawkes\");",
+							"    pm.expect(pm.response.json()[\"birthday\"]).to.eq(\"1985/06/15\");",
+							"    pm.expect(pm.response.json()[\"country\"]).to.eq(\"USA\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Clint Hawkes\",\n    \"birthday\": \"1985/06/15\",\n    \"country\": \"USA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Attempt to only change passenger1 birthday with PUT",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2e4aaea4-9fa2-47bc-9cf6-3dbb2cf83498",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "1728032b-6647-49b9-a5c6-b32efdb400a2",
+						"exec": [
+							"pm.test(\"400 status code\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"birthday\": \"1980/06/15\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change passenger1 birthday",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3e730b5d-e0cd-44e3-9faa-bf0e2331a784",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c9037361-a388-4553-9568-7ddaee763df7",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"birthday\": \"1980/06/15\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change passenger1 name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "befc201c-c56e-4a19-815c-318c4e3df1c6",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d2af612c-2e69-4aa6-8c1b-34864d14485c",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Wayne Hawkes\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change passenger1 country",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "913a019b-3229-421c-a745-ae0016609044",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e32b0432-474f-48bc-b3dd-91ad8a7b19f6",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"country\": \"Germany\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change passenger1 back to original",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f17a727c-458c-44dd-a90e-6e6a585f23ad",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "813ad419-20dd-452a-8f9f-354c2322fd9a",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Clint Hawkes\",\n    \"birthday\": \"1985/06/15\",\n    \"country\": \"USA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create passenger2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e862b5a5-92bb-45f4-b666-e51fecba9679",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "cf8581ba-0e01-4bf4-85cd-a1de283455ab",
+						"exec": [
+							"pm.environment.set(\"passenger02_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"John Doe\");",
+							"    pm.expect(pm.response.json()[\"birthday\"]).to.eq(\"1990/10/15\");",
+							"    pm.expect(pm.response.json()[\"country\"]).to.eq(\"USA\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"John Doe\",\n    \"birthday\": \"1990/10/15\",\n    \"country\": \"USA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create passenger3",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "8a86bf7a-981c-44a7-8088-cd300b0d6155",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "023dc270-9f48-4e25-9496-4815b7fd43f0",
+						"exec": [
+							"pm.environment.set(\"passenger03_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"Michael Scott\");",
+							"    pm.expect(pm.response.json()[\"birthday\"]).to.eq(\"1965/03/23\");",
+							"    pm.expect(pm.response.json()[\"country\"]).to.eq(\"USA\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Michael Scott\",\n    \"birthday\": \"1965/03/23\",\n    \"country\": \"USA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create passenger4",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2304cc9e-cbce-4161-9731-f77f7bdc770d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d304886d-fbd9-4c80-8e8b-a7460158aaff",
+						"exec": [
+							"pm.environment.set(\"passenger04_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"Pam Beasley\");",
+							"    pm.expect(pm.response.json()[\"birthday\"]).to.eq(\"1980/01/10\");",
+							"    pm.expect(pm.response.json()[\"country\"]).to.eq(\"USA\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Pam Beasley\",\n    \"birthday\": \"1980/01/10\",\n    \"country\": \"USA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create passenger5",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "78914e03-aae0-4cd5-a4a0-517d22e6312f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a4f2ec49-a3a2-4c17-9004-81d12057c7a1",
+						"exec": [
+							"pm.environment.set(\"passenger05_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"Richard Hendrix\");",
+							"    pm.expect(pm.response.json()[\"birthday\"]).to.eq(\"1988/11/24\");",
+							"    pm.expect(pm.response.json()[\"country\"]).to.eq(\"USA\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Richard Hendrix\",\n    \"birthday\": \"1988/11/24\",\n    \"country\": \"USA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create passenger6",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6be5cc70-5015-4f20-b17f-8b581b45bc9e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "714e6cee-75c7-49ca-96d0-bf837f392c58",
+						"exec": [
+							"pm.environment.set(\"passenger06_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"Ben Lewis\");",
+							"    pm.expect(pm.response.json()[\"birthday\"]).to.eq(\"1984/10/13\");",
+							"    pm.expect(pm.response.json()[\"country\"]).to.eq(\"USA\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Ben Lewis\",\n    \"birthday\": \"1984/10/13\",\n    \"country\": \"USA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Criteria 1&2 flights] Get flights user1 jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0cd8fdae-c460-4874-8de7-6788cbd142ae",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Criteria 12] Get flights user1 jwt ONLY ACCEPT HTML",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e0c4a05d-3def-4bfd-80f1-ccb3cc9aedff",
+						"exec": [
+							"pm.test(\"406 status code\", function () {",
+							"    pm.response.to.have.status(406);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/html",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flights no jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a8993dc7-d634-4fd5-9c52-8ba44a8c8263",
+						"exec": [
+							"pm.test(\"401 status code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flights invalid jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60a4febd-0217-49e9-a595-f24037a3f4a0",
+						"exec": [
+							"pm.test(\"401 status code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{invalid_jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get invalid flight user1 jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a537687a-67aa-45c7-8b18-75b78c12d8d0",
+						"exec": [
+							"pm.test(\"404 status code\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{invalid_flight}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{invalid_flight}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flight1 with user1 jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a09b4b2e-7da4-40e4-a9ee-1f53b58ca961",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flight1 no jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a2d21669-cad0-4db1-82c8-4c44abad0acd",
+						"exec": [
+							"pm.test(\"401 status code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flight1 invalid jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "258c5576-b7f1-46c5-80bc-8a93e98d9330",
+						"exec": [
+							"pm.test(\"401 status code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{invalid_jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flight1 with non-owner jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e26c03b-5d7a-470b-b320-0e4329250974",
+						"exec": [
+							"pm.test(\"403 status code\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Criteria 1&2 passengers] Get all passengers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8b083cea-d2b9-4bf3-819b-dfeb16ba9b4a",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Criteria 12] Get all passengers not accept JSON",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fe3353c8-ae52-44ed-af8a-ca19a90ffa77",
+						"exec": [
+							"pm.test(\"406 status code\", function () {",
+							"    pm.response.to.have.status(406);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/html",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flight1 showing no passengers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "adba1431-f234-4d14-914d-eaa6476a1fc7",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get passenger1 showing no flights",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d5e403a2-3e81-4cac-ab41-8e77479aab7e",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add passenger1 to flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2a8538f2-5681-4a8b-86c5-a87500683310",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flight1 showing passenger01 in passengers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f1bec67f-6221-4e11-a14f-50d44c057756",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get passenger1 showing flight01 in flights",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57d27e1d-6a71-4dd5-9e20-ea279a371cb2",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete passenger1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5459abd2-7bb0-4e3d-99a8-f69e9a7f7f47",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flight1 showing no passengers after passenger01 deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f1f56800-7607-4b81-b2dd-4f6d6dd1d227",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Attempt to get passenger1 but no passenger is found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "72cf96b5-d1a3-41ba-b1a2-7eb9f30aec45",
+						"exec": [
+							"pm.test(\"404 status code\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create passenger1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a96b992b-b3ec-4ddf-8a6c-acdfb19904a1",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "39d6acf7-50e8-4b5b-a1c1-7c740f56f98e",
+						"exec": [
+							"pm.environment.set(\"passenger01_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"Clint Hawkes\");",
+							"    pm.expect(pm.response.json()[\"birthday\"]).to.eq(\"1985/06/15\");",
+							"    pm.expect(pm.response.json()[\"country\"]).to.eq(\"USA\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Clint Hawkes\",\n    \"birthday\": \"1985/06/15\",\n    \"country\": \"USA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add passenger1 to flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ce06f4d8-779e-41f6-b9c6-5a5c83d1aa56",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flight1 showing passenger01 in passengers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0cd8d01c-c0bb-45c9-b733-9a44d5abfbdd",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get passenger1 showing flight01 in flights",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f594e463-d7dd-4b60-b8eb-2349b38ee5e5",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flight01",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "53aebd90-366f-4e0b-9a02-5afe2bc0e30e",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Attempt to get flight1 after flight01 deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "77f800f7-4db5-46c6-80bd-89bfc2813fe2",
+						"exec": [
+							"pm.test(\"404 status code\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get passenger1 showing no flights",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4aefd605-3621-479d-b82c-34cce0b74680",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create flight1 owner1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6abbe6e6-fce4-4ed6-a61c-3f91f9571625",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "65a74748-c7cc-4cfb-8a69-ebb20c5e4be3",
+						"exec": [
+							"pm.environment.set(\"flight01_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"date\"]).to.eq(\"2020/12/15\");",
+							"    pm.expect(pm.response.json()[\"capacity\"]).to.eq(12);",
+							"    pm.expect(pm.response.json()[\"origin\"]).to.eq(\"Phoenix, AZ\");",
+							"    pm.expect(pm.response.json()[\"destination\"]).to.eq(\"Austin, TX\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2020/12/15\",\n    \"capacity\": 12,\n    \"origin\": \"Phoenix, AZ\",\n    \"destination\": \"Austin, TX\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add passenger1 to flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11b5667f-e06a-48c6-919a-b2b974b9d905",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add passenger2 to flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57e56209-7c35-475c-8eec-cf257ba513ec",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger02_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger02_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add passenger3 to flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "77fe13fe-1bcb-4940-9dea-661fdfec03d5",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger03_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger03_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add passenger4 to flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8cc25ffd-e196-4ef5-80fd-09a4409d5829",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger04_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger04_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add passenger5 to flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "969b66cd-49f6-4763-99e0-2b3c28d36edf",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger05_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger05_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify flight1 capacity attribute to 1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c6387a9b-6502-4df9-8f35-56960dba1e83",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5cdc6447-9358-4ede-8444-d6d9e847232d",
+						"exec": [
+							"pm.test(\"403 status code\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"capacity\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify flight1 capacity attribute to 5",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "adf0f1a4-482c-4efb-8131-0f2502715562",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8551e8f5-8326-4198-a6e0-84256268f985",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"capacity\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add passenger6 to flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1a9e1dc2-fc07-4252-9c65-65d7f7670f4b",
+						"exec": [
+							"pm.test(\"403 status code\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger06_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger06_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify flight1 capacity attribute to 12",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9ae9933d-37fe-4d8b-bcf5-435725f9cc97",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6141d4f-3394-4bf7-8230-4709cb608f1a",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"capacity\": 12\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add passenger6 to flight1 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "72326bcb-0301-4ec8-a7ae-003b23757f42",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger06_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger06_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove passenger1 from flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e019c18c-0af7-4702-b359-850c4cfa1f78",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove passenger2 from flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f8fd924a-6082-4163-89ca-890297fefb67",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger02_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger02_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove passenger3 from flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b8959986-63eb-4449-a349-4cb67607bdd1",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger03_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger03_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove passenger4 from flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7da0e273-ff56-419b-884a-271811100057",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger04_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger04_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove passenger5 from flight1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b7777ab5-7f69-4771-8209-3d75d244c47d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "9f4a5c46-b223-4c8f-bc6e-e4c57a4fc383",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger05_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger05_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flight1 showing passenger06 in passengers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cb0f4797-4afc-40ca-a6a9-c6ba7e059a04",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get passenger06 showing flight01 in flights",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19a07eed-5f79-4e5f-bbbc-ede1c7645753",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger06_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger06_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove passenger6 from flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "43485c83-7749-411a-ae98-93c75bce1d12",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger06_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger06_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flight1 showing no passengers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "40b3d472-5e74-4488-85cb-e8cb634385af",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get passenger06 showing no flights",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a40fe793-6de3-48a2-99eb-5078cf3aa178",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger06_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger06_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove invalid passenger from flight1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8c1b6d80-be8d-4549-a405-a92c9d9bf695",
+						"exec": [
+							"pm.test(\"404 status code\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}",
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete passenger1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f0fccc0b-710d-4c3a-84e4-3ea93bad5517",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete passenger2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8493b413-a5be-41f0-9c1d-8ec891cb794c",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger02_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger02_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete passenger3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b1343cc8-2bb9-4b60-9e36-3165bf9ce44c",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger03_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger03_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete passenger4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "35da4ccc-0b3b-49be-af49-6229b33bdd76",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger04_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger04_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete passenger5",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a7d8e7b4-e8b2-4cba-aa90-c96c9c80d68c",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger05_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger05_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete passenger6",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "605a80b7-ee97-4e12-9852-f8ae5b609d58",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers/{{passenger06_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers",
+						"{{passenger06_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all passengers",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flight01 no jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd9a3625-73a9-4481-867c-66d7006b69de",
+						"exec": [
+							"pm.test(\"401 status code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flight01 invalid jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "baffec87-0603-4d36-83d4-85b96b99b642",
+						"exec": [
+							"pm.test(\"401 status code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{invalid_jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flight01 with non-owner jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "61b3aee9-812d-4d41-bbb7-f3594b6860c3",
+						"exec": [
+							"pm.test(\"403 status code\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flight01",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e663fb45-3cfa-43ed-9e46-945e7fd3838a",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight01_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight01_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flight02",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f3fecf4f-012a-4b40-8bd2-f16d43a3099e",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight02_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight02_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flight03",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "61f639d0-25f5-463a-800e-65f49fb8a89d",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight03_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight03_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flight04",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "56192e27-6a1a-4ef6-b4f9-8f6a0cf9623d",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight04_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight04_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flight05",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7a09e1c4-6cf1-44e4-aacd-e6c762761ebd",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight05_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight05_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flight06",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d1cb5c60-9a40-4c02-8337-8db70397b637",
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights/{{flight06_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights",
+						"{{flight06_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get flights user1 jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b7a6e9ad-03fb-446c-9aa3-11edc5ea4c5b",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/flights",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all passengers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f1b3bc4f-080f-4354-9685-c80970d09843",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var first = pm.environment.get(\"jwt1\");",
+							"var second = pm.environment.get(\"jwt2\");",
+							"pm.environment.clear();",
+							"pm.environment.set(\"jwt1\", first);",
+							"pm.environment.set(\"jwt2\", second);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/passengers",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"passengers"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

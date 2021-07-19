@@ -1,0 +1,10 @@
+base_url = "https://hw7-hawkesc.wl.r.appspot.com"
+#base_url = "http://127.0.0.1:8080"
+clientId = "352050865956-of6a0pquf8gf82bj95su0aajrtjrc7ag.apps.googleusercontent.com"
+clientSecret = "NGe14QnWb5B6Gnd7X7WXE9M_"
+redirectURL = base_url + "/oauth"
+boats_url = base_url + "/boats/"
+scope = "https://www.googleapis.com/auth/userinfo.profile"
+entityId = 5634161670881280
+boats = "boats"
+owners = "owners"

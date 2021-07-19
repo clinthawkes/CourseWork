@@ -1,0 +1,6 @@
+#!/bin/bash
+gcc -Wall -std=c99 -pedantic-errors -o otp_enc_d otp_enc_d.c
+gcc -Wall -std=c99 -pedantic-errors -o otp_dec_d otp_dec_d.c
+gcc -Wall -std=gnu -pedantic-errors -o otp_enc otp_enc.c
+gcc -Wall -std=gnu -pedantic-errors -o otp_dec otp_dec.c
+gcc -Wall -std=c99 -pedantic-errors -o keygen keygen.c

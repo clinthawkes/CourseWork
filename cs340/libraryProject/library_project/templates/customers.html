@@ -1,0 +1,73 @@
+<html>
+  <body>
+ 	<div class="container">
+	   <div class = "row">
+		<div class = "col-12 pt-4">
+		   <h5>Add Customer</h5>
+           <form id="addCustomer" action="/customers" method="POST">
+			  <div class="form-group">
+				<label for="firstName">First Name</label>
+				<input type="text" class="form-control" name="firstName" placeholder="First Name">
+			  </div>
+			  <div class="form-group">
+				<label for="lastName">Last Name</label>
+				<input type="text" class="form-control" name="lastName" placeholder="Last Name">
+			  </div>
+				<div class="form-group">
+				<label for="streetAddress">Street Address</label>
+				<input type="text" class="form-control" name="streetAddress" placeholder="Street Address">
+			  </div>
+			  <div class="form-group">
+				<label for="city">City</label>
+				<input type="text" class="form-control" name="city" placeholder="City">
+			  </div>
+				<div class="form-group">
+				<label for="state">State</label>
+				<input type="text" class="form-control" name="state" placeholder="State">
+			  </div>
+			  <div class="form-group">
+				<label for="zip">Zip</label>
+				<input type="text" class="form-control" name="zip" placeholder="Zip">
+			  </div>
+			  <button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		   </div>
+		</div>
+			   <div class = "row">
+				<div class = "col-12 pt-4">
+				<h5>Customers</h5>
+				<table class="table">
+				  <thead>
+					<tr>
+					  <th scope="col">CustomerID</th>
+					  <th scope="col">First Name</th>
+					  <th scope="col">Last Name</th>
+					  <th scope="col">Street Address</th>
+					  <th scope="col">City</th>
+					  <th scope="col">State</th>
+					  <th scope="col">Zip</th>
+					  <th scope="col"></th>
+					  <th scope="col"></th>
+					</tr>
+				  </thead>
+				  <tbody>
+                    {% for c in customers %}
+					<tr>
+                        <th scope="row">{{c[0]}}</th>
+                        <td>{{c[1]}}</td>
+                        <td>{{c[2]}}</td>
+                        <td>{{c[3]}}</td>
+                        <td>{{c[4]}}</td>
+                        <td>{{c[5]}}</td>
+                        <td>{{c[6]}}</td>
+                      <td><button type="button" class="btn btn-secondary" name="edit" onclick="window.location = '/update_customer/{{c[0]}}'">Edit</button></td>
+                      <td><button type="button" class="btn btn-secondary" name="delete" onclick="window.location = '/delete_customer/{{c[0]}}'">Delete</button></td>
+					</tr>
+                    {% endfor %} 
+				  </tbody>
+				</table>
+		   </div>
+		</div>
+	  </div>
+  </body>
+</html>

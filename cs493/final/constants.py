@@ -1,0 +1,12 @@
+base_url = "https://final-hawkesc.wm.r.appspot.com"
+#base_url = "http://127.0.0.1:8080"
+clientId = "51448559354-9cvt077brb4s2fvbq7th635q5p0vm616.apps.googleusercontent.com"
+clientSecret = "J1KpAxAYKIwlQpeDCQ-J-6gb"
+redirectURL = base_url + "/oauth"
+flights_url = base_url + "/flights/"
+passengers_url = base_url + "/passengers/"
+scope = "https://www.googleapis.com/auth/userinfo.profile"
+entityId = 5634161670881280
+users = "users"
+flights = "flights"
+passengers = "passengers"
