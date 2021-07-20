@@ -14,7 +14,7 @@ CS271 - Computer Architecture and Assembly Language
 
 CS340 - Intro Databases
         
-   -  [Database Project](https://github.com/clinthawkes/CourseWork/tree/main/cs340/libraryProject)
+   -  [Database Project in Python](https://github.com/clinthawkes/CourseWork/tree/main/cs340/libraryProject)
 
 CS344 - Operating Systems
         
@@ -28,7 +28,7 @@ CS361 - Software Engineering I
 
 CS362 - Software Engineering II
 
-   -  [Group Testing Project](https://github.com/clinthawkes/CourseWork/tree/main/cs362/cs362_group5)
+   -  [Group Testing Project in Python](https://github.com/clinthawkes/CourseWork/tree/main/cs362/cs362_group5)
 
 CS372 - Networking
 
@@ -36,7 +36,7 @@ CS372 - Networking
 
 CS493 - Cloud Development
         
-   -  [Docker Project](https://github.com/clinthawkes/CourseWork/tree/main/cs493/hw8)
+   -  [Docker Project in Python](https://github.com/clinthawkes/CourseWork/tree/main/cs493/hw8)
         
-   -  [Final REST API Project](https://github.com/clinthawkes/CourseWork/tree/main/cs493/final)
+   -  [Final REST API Project in Python](https://github.com/clinthawkes/CourseWork/tree/main/cs493/final)
         
