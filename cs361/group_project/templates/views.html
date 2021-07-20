@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="container">
+            <h1>{{ location[0].loc_name }}</h1>
+            <!-- Displays "City, Country" if available, otherwise just city or just country or nothing -->
+            {% if location[0].loc_city and  location[0].loc_country %}
+            <h3>{{ location[0].loc_city }}, {{ location[0].loc_country }}</h3>
+            {% elif location[0].loc_city %}
+            <h3>{{ location[0].loc_city }}</h3>
+            {% elif location[0].loc_country %}
+            <h3>{{ location[0].loc_country }}</h3>
+            {% endif %}
+        </div>
+
+        <div class="container">
+          <div id='map' style=' height: 300px; border: 2px solid orange; width: 100%;'></div>
+          <script>
+              mapboxgl.accessToken = 'pk.eyJ1IjoianNvbWEiLCJhIjoibFJmYl9JWSJ9.AUm8d76cbOvVEn2mMeG_ZA';
+
+              var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v9',
+                center: [{{ location[0].loc_longitude }}, {{ location[0].loc_latitude }}],
+                zoom: 8
+              });
+              map.on('load', function() {
+                var geojsonData = {
+                  "type": "FeatureCollection",
+                  "features": [{
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [{{ location[0].loc_longitude }}, {{ location[0].loc_latitude }}]
+                    }
+                  }]
+                };
+                map.addLayer({
+                  "id": "points",
+                  "type": "circle",
+                  "source": {
+                    "type": "geojson",
+                    "data": geojsonData
+                  },
+                  "paint": {
+                    "circle-radius": 3,
+                    "circle-color": "red",
+                    "circle-stroke-width": 1,
+                    "circle-stroke-color": "black"
+                  }
+                })
+              })
+          </script>
+        </div>
+    </div>
+
+    <div class="col">
+        {% if location[0].loc_name == "White House" %}
+        <div class="container"><img src="/static/images/whitehouse.jpg" alt="photo" style="padding-top:80px; width: 50% ;height: auto; display: block"></div>
+        {% endif %}
+        {% if location[0].loc_name == "Empire State Building" %}
+        <div class="container"><img src="/static/images/empirestate.jpg" alt="photo"style="padding-top:80px; width: 50% ;height: auto; display: block"></div>
+        {% endif %}
+        {% if location[0].loc_name == "Mt. Everest" %}
+        <div class="container"><img src="/static/images/everest.jpg" alt="photo"style="padding-top:80px; width: 50% ;height: auto; display: block"></div>
+        {% endif %}
+        <dl class="factlist" style='padding-top: 75px'>
+            <dt><span class="badge badge-secondary">img</span></dt>
+            {% for row in facts %}
+            <p>{{ row.username }}<br>
+            {{ row.hf_content }}</p>
+            {% endfor %}
+        </dl>
+        <form id="add-fact-form" method="post" action="/addFact">
+            <div class="form-group">
+                <label for="textarea1">Enter Fact:</label>
+                <textarea class="form-control" name="textarea1" id="textarea1" rows="3" maxlength="500"></textarea>
+             </div>
+            <input type="hidden" id="loc_id" name="loc_id" value="{{ location[0].loc_id }}">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a class="btn btn-danger" onclick="toggleAddForm(2)" role="button">Cancel</a>
+        </form>
+        <a id="add-fact-button" class="btn btn-info" onclick="toggleAddForm(1)" role="button">Add Fact</a>
+    </div>
+</div>
+{% endblock %}
+
